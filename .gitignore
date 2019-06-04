@@ -5,4 +5,5 @@ __pycache__
 notes.txt
 test_access.py
 bonus_selectors.py
+slot_results.csv
 *.pdf
