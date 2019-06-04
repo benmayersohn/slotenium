@@ -1,0 +1,8 @@
+results/*
+!results/siberian_storm/
+__pycache__
+.idea
+notes.txt
+test_access.py
+bonus_selectors.py
+*.pdf
