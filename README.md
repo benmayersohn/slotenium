@@ -71,12 +71,16 @@ The probability of losing is about 63.6%. This is comparable to the 20-line [Cle
 
 ### Average RTP
 
-One can calculate an approximate average RTP for each game. Recall that for Siberian Storm, this was about 96%. I obtained 96.64% (see `analysis.py`) - which is pretty close to the expected value! Below we can see how the average RTP evolves with the number of winnings. The y-axis represents the return as a multiple of the wager.
+One can calculate an approximate average RTP for each game. Recall that for Siberian Storm, this was about 96%. I obtained 96.64% (see `analysis.py`) - which is pretty close to the expected value! Below we can see how the average RTP evolves with the number of winnings.
 
 ![Evolution of RTP](./assets/rtp_evol.png)
 
 ### Volatility
 
-Two games with the same average RTP can have very different probability distributions. Low volatility games tend to produce wins more frequently, but the average return per win tends to be smaller. To capture these differences, the average RTP can be decoupled into two measures: the **average RTP per win** (RTPW); and the probability of winning. The product of these gives the average RTP. Low volatility games shift more weight onto the probability of winning, while high volatility games shift more weight onto the average RTPW.
+Two games with the same average RTP can have very different probability distributions. One way to capture these differences is to break down the average RTP into a product of two measures: the **average RTP conditioned on winning** (RTPW); and the probability of winning. Low volatility games shift more weight onto the probability of winning, while high volatility games shift more weight onto the RTPW.
 
-For Siberian Storm, the average RTPW is about **2.66 times the wager**. You arrive at this measure by dividing the average RTP (0.9664) by the probability of winning (0.364). This is a medium-low volatility game, just like 20-line Cleopatra. Compare this to 1-line Cleopatra, which has an RTP of 95.02% but only an [11.3% chance of a hit](https://casino.guru/cleopatra-slot-math). This corresponds to an RTPW of 8.4!
+For Siberian Storm, the average RTPW is about **2.66 times the wager**. We arrive at this measure by dividing the average RTP as a fraction (0.9664) by the probability of winning (0.364). This is a medium volatility game, which is also true of 20-line Cleopatra. Compare this to 1-line Cleopatra, which has an RTP of 95.02% but only an [11.3% chance of a hit](https://casino.guru/cleopatra-slot-math). This corresponds to an RTPW of **8.4 times the wager** - a highly volatile game!
+
+The RTPW is a useful measure but it is incomplete, as it does not describe the entire shape of the probability distribution. Another measure of volatility (and the more common one) is the **variance** of the return, or the average squared deviation of the observations from the mean. If we take the square root of the variance and divide it by the mean RTP, we get the **coefficient of variation** (CV), which is (in my opinion) the most useful measure of volatility.
+
+If we run `analysis.py`, we see that Siberian Storm has a CV of about 6.12. Using the probability distribution from Casino Guru, I get a CV for 20-line Cleopatra of about 5.58 - similar to that of Siberian Storm. 1-line Cleopatra has a much higher CV of 14.64.
