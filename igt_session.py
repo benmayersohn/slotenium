@@ -46,13 +46,18 @@ class SpinOutcomeDetermined(object):
                 return True
 
             # If a different button is visible, click it.
+
             for element in self.other_elements:
                 try:
                     if element.is_displayed():
-                        element.click()
-                        break
-                except (slex.ElementNotVisibleException, slex.WebDriverException):
-                    self.other_elements.remove(element)
+                        try:
+                            element.click()
+                        except (slex.ElementNotVisibleException, slex.WebDriverException):
+                            continue
+                        else:
+                            break
+                except slex.NoSuchElementException:
+                    continue
 
             # Some games explicitly pass an "Insufficient funds" dialog.
             # Return True if this happens...
