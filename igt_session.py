@@ -47,9 +47,12 @@ class SpinOutcomeDetermined(object):
 
             # If a different button is visible, click it.
             for element in self.other_elements:
-                if element.is_displayed():
-                    element.click()
-                    break
+                try:
+                    if element.is_displayed():
+                        element.click()
+                        break
+                except (slex.ElementNotVisibleException, slex.WebDriverException):
+                    self.other_elements.remove(element)
 
             # Some games explicitly pass an "Insufficient funds" dialog.
             # Return True if this happens...
@@ -217,7 +220,7 @@ class IGTSlotSession:
 
         self.just_loaded = True
 
-    def spin_once(self, restore_balance: bool = True):
+    def spin_once(self, restore_balance: bool = True) -> tuple:
 
         # Check our balance. If it is too low, either (1) refresh the page or (2) print a message...
         if self.get_wager() > self.get_balance():
@@ -262,18 +265,24 @@ class IGTSlotSession:
             win = 0.
 
         # store result
-        self.outcomes.append((spin_time, wager, win, balance))
+        result = (spin_time, wager, win, balance)
+        self.outcomes.append(result)
+        return result
 
     def spin(self, num_spins: Optional[int] = 1, restore_balance: bool = True):
 
+        # Should we spin or not?
+        def spin_condition_true(spin_number):
+            return True if num_spins is None else spin_number < num_spins
+
         try:
             # stop spinning when we close the window...
-            if num_spins is None:
-                while True:
-                    self.spin_once(restore_balance=restore_balance)
-            else:
-                for _ in range(num_spins):
-                    self.spin_once(restore_balance=restore_balance)
+            count = 0
+            while spin_condition_true(count):
+                count += 1
+                result = self.spin_once(restore_balance=restore_balance)
+                print(f"Spin {count}: Wager={result[1]}, Win={result[2]}, Balance={result[3]}")
+
         except (slex.NoSuchWindowException, KeyboardInterrupt):  # need to use KeyboardInterrupt if headless...
             print("\nSession terminated by user.")
         except slex.TimeoutException as e:
