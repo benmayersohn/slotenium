@@ -189,11 +189,27 @@ class IGTSlotSession:
         spin_xpath = "//div[@id='game']//div[contains(@style,'visibility: inherit')]"
         self.spin_button = self.driver.find_element_by_xpath(spin_xpath)
 
-        # Get next two buttons on same level
-        # One is the "fast forward" button, the other is the "start bonus" button...
-        second_xpath = spin_xpath + "/following-sibling::div"
-        third_xpath = second_xpath + "/following-sibling::div"
-        self.other_buttons = [self.driver.find_element_by_xpath(p) for p in (second_xpath, third_xpath)]
+        # Next, we get all other buttons on the same level as the spin button
+        # These include the "fast-forward" button through big wins, and the start bonus button.
+        self.other_buttons = list()
+
+        # get all preceding elements
+        try:
+            prev_xpath = spin_xpath
+            while True:
+                prev_xpath += "/preceding-sibling::div"
+                self.other_buttons.append(self.driver.find_element_by_xpath(prev_xpath))
+        except slex.NoSuchElementException:
+            pass
+
+        # get all following elements
+        try:
+            next_xpath = spin_xpath
+            while True:
+                next_xpath += "/following-sibling::div"
+                self.other_buttons.append(self.driver.find_element_by_xpath(next_xpath))
+        except slex.NoSuchElementException:
+            pass
 
         # create initial row
         # (time, wager, win, balance)

@@ -9,13 +9,13 @@ from urllib.parse import urlunparse, urlencode
 # Skin Code: Serves up the game's graphics.
 # NS Code: Code for the eBetting client (GNUG = Golden Nugget, AMYA = Amaya)
 softwareid = {'wolf_run': '200-1196-012', 'lil_lady': '200-1190-011', 'siberian_storm': '200-1150-003',
-              'davinci_diamonds': '200-1100-011', 'cleopatra': '200-1173-001'}
+              'davinci_diamonds': '200-1100-011', 'cleopatra': '200-1173-001', 'double_diamond': '200-1219-001'}
 
 skincode = {'wolf_run': 'CSRS', 'lil_lady': 'GNT1',
-            'siberian_storm': 'GNT2', 'davinci_diamonds': 'GNT2', 'cleopatra': 'GNT2'}
+            'siberian_storm': 'GNT2', 'davinci_diamonds': 'GNT2', 'cleopatra': 'GNT2', 'double_diamond': 'GNT2'}
 
 nscode = {'wolf_run': 'AMYA', 'lil_lady': 'GNUG',
-          'siberian_storm': 'GNUG', 'davinci_diamonds': 'GNUG', 'cleopatra': 'GNUG'}
+          'siberian_storm': 'GNUG', 'davinci_diamonds': 'GNUG', 'cleopatra': 'GNUG', 'double_diamond': 'GNUG'}
 
 
 def get_url_from_name(name):
