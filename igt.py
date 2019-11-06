@@ -253,6 +253,8 @@ class IGTSlotSession:
             WebDriverWait(self.driver, 1000).until(SpinOutcomeDetermined(self.spin_button, self.other_buttons))
         except slex.TimeoutException as e:
             self.exception_quit(e, "Lost connection! WebDriver closed.")
+        except slex.WebDriverException:
+            self.exception_quit(e, "\nSome exception occurred!")
 
         # Check to see if we won anything
         balance = self.get_balance()

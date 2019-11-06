@@ -4,7 +4,7 @@ from os.path import isfile, join
 import matplotlib.pyplot as plt 
 import numpy as np
 
-plotting_on = False
+plotting_on = True
 
 filedir = './results/siberian_storm/'
 filenames = [filedir + f for f in listdir(filedir) if isfile(join(filedir, f))]
@@ -23,17 +23,18 @@ print(f"We have {len(win_ratio)} observations.\n")
 bins = [-1, 0, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500]
 labels = ['Loss'] + ['->{}x'.format(entry if entry < 1 else int(entry)) for entry in bins[2:]]
 
-categorized = pd.cut(win_ratio, bins=bins, labels=labels).value_counts()
+categorized = pd.cut(win_ratio, bins=bins, labels=labels).value_counts().reindex(labels)
 
 # convert to PMF
 categorized = categorized / categorized.sum()
 
 print(f"Siberian Storm has an average RTP of {win_ratio.mean()}")
-print(f"Siberian Storm has an average RTPW of {win_ratio.mean() / (1 - categorized['Loss'])}\n")
+print(f"Siberian Storm has a win probability of {1-categorized['Loss']}")
+print(f"Siberian Storm has an average RTPW of {win_ratio.mean() / (1 - categorized['Loss'])}")
 
 variance = win_ratio.var()
 cv = np.sqrt(variance)/win_ratio.mean()
-print(f"Siberian Storm has a CV of {cv}")
+print(f"Siberian Storm has a CV of {cv}\n")
 
 # Compare with 20-line Cleopatra and 1-line Cleopatra
 # See https://casino.guru/cleopatra-slot-math for probabilities and intervals
@@ -66,7 +67,10 @@ probabilities = np.array([1-probabilities.sum()] + probabilities.tolist())
 rtp_20 = np.sum(vals * probabilities)
 var_20 = np.sum((vals-rtp_20)**2 * probabilities)
 
-print(f'20-line Cleopatra has a CV of {np.sqrt(var_20) / rtp_20}')
+print(f'We gave 20-line Cleopatra an RTP of {rtp_20}')
+print(f'20-line Cleopatra has a win probability of {1-probabilities[0]}')
+print(f'20-line Cleopatra has an RTPW of {rtp_20 / (1-probabilities[0])}')
+print(f'20-line Cleopatra has a CV of {np.sqrt(var_20) / rtp_20}\n')
 
 # 1-line
 intervals = np.array([
@@ -96,6 +100,9 @@ probabilities = np.array([1-probabilities.sum()] + probabilities.tolist())
 rtp_1 = np.sum(vals * probabilities)
 var_1 = np.sum((vals-rtp_20)**2 * probabilities)
 
+print(f'We gave 1-line Cleopatra an RTP of {rtp_1}')
+print(f'1-line Cleopatra has a win probability of {1-probabilities[0]}')
+print(f'1-line Cleopatra has an RTPW of {rtp_1 / (1-probabilities[0])}')
 print(f'1-line Cleopatra has a CV of {np.sqrt(var_1) / rtp_1}')
 
 ##############################################################################

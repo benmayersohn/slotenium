@@ -20,28 +20,42 @@ nscode = {'wolf_run': 'AMYA', 'lil_lady': 'GNUG',
           'siberian_storm': 'GNUG', 'davinci_diamonds': 'GNUG', 'cleopatra': 'GNUG', 'double_diamond': 'GNUG',
           'triple_diamond': 'GNUG', 'red_hot': 'AMYA'}
 
+# For Aristocrat games
+# All we need is a Game ID
+game = {'buffalo': '3013', '50_dragons': '3007', 'geisha': '1699', 'miss_kitty': '3014', 'lucky_88': '4180',
+        'sun_moon': '1701', 'red_baron': '3017', '50_lions': '3008', 'fire_light': '4182'}
 
-def get_url_from_name(name):
+
+def get_url_from_name(name, brand='igt'):
     """
     Use the name of the game (keys in the dictionaries above) to construct a valid URL
     """
-    scheme = 'https'
-    netloc = 'm.ac.rgsgames.com'  # RGS = "remote game server" by IGT
-    path = '/games/index.html'
-    params = ''
 
+    scheme = 'https'
+    params = ''
+    fragment = ''
+
+    netloc = path = ''
     query = dict()
-    query['currencycode'] = 'FPY'  # "Free PlaY"
-    query['securetoken'] = '999999'  # Can be anything
-    query['countrycode'] = 'CA'  # Canada
-    query['language'] = 'en'  # Only English supported right now (sorry!)
-    query['softwareid'] = softwareid[name]
-    query['skincode'] = skincode[name]
-    query['nscode'] = nscode[name]
+    if brand == 'igt':
+        netloc = 'm.ac.rgsgames.com'  # RGS = "remote game server" by IGT
+        path = '/games/index.html'
+
+        query['currencycode'] = 'FPY'  # "Free PlaY"
+        query['securetoken'] = '999999'  # Can be anything
+        query['countrycode'] = 'CA'  # Canada
+        query['language'] = 'en'  # Only English supported right now (sorry!)
+        query['softwareid'] = softwareid[name]
+        query['skincode'] = skincode[name]
+        query['nscode'] = nscode[name]
+
+    if brand == 'aristocrat':
+        netloc = 'supermegaslot.com'
+        path = '/demo/game.php'
+        query['game'] = game[name]
 
     # link query arguments
     query_str = urlencode([pair for pair in query.items()])
 
-    fragment = ''
     return urlunparse((scheme, netloc, path, params, query_str, fragment))
 
