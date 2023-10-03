@@ -2,5 +2,5 @@ pandas==0.24.2
 selenium==3.141.0
 numpy==1.22.0
 scipy==1.2.1
-urllib3==1.26.5
+urllib3==1.26.17
 matplotlib==3.0.3
